@@ -19,19 +19,43 @@ import Location from "@/components/location-stats";
 import DeviceStats from "@/components/device-stats";
 
 const Link = () => {
+  const downloadImage = () => {
+    const imageUrl = url?.qr;
+    const fileName = `${url?.title}.png`;
+
+    fetch(imageUrl)
+      .then((response) => response.blob()) // Convert the image to a Blob
+      .then((blob) => {
+        const blobUrl = URL.createObjectURL(blob); // Create a Blob URL
+        const anchor = document.createElement("a");
+        anchor.href = blobUrl;
+        anchor.download = fileName; // Set the desired file name
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+      })
+      .catch((error) => console.error("Error downloading the image:", error));
+
+    // const fileName = url?.title;
+    // Create an anchor element
+    // const anchor = document.createElement("a");
+    // anchor.href = imageUrl;
+    // anchor.download = fileName;
+
+    // // Append the anchor to the body
+    // document.body.appendChild(anchor);
+
+    // // Trigger the download by simulating a click event
+    // anchor.click();
+
+    // // Remove the anchor from the document
+    // document.body.removeChild(anchor);
+  };
+
   const { id } = useParams();
   const { user } = UrlState();
   const navigate = useNavigate();
-  const downloadImage = () => {
-    const imageUrl = url?.qr;
-    const fileName = url?.title;
-    const anchor = document.createElement("a");
-    anchor.href = imageUrl;
-    anchor.download = fileName;
-    document.body.appendChild(anchor);
-    anchor.click(); //download the url
-    document.body.removeChild(anchor); //clean up the anchor element
-  };
+
   const {
     loading,
     data: url,
@@ -68,6 +92,7 @@ const Link = () => {
       {(loading || loadingStats) && (
         <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />
       )}
+
       <div className="flex flex-col gap-8 sm:flex-row justify-between">
         <div className="flex flex-col items-start gap-8 rounded-lg sm:w-2/5">
           <span className="text-6xl font-extrabold hover-underline cursor-pointer">
@@ -89,15 +114,13 @@ const Link = () => {
             {url?.original_url}
           </a>
           <span className="flex items-end font-extralight text-sm">
-            {new Date(url?.created_at).toLocaleString()}{" "}
+            {new Date(url?.created_at).toLocaleString()}
           </span>
           <div className="flex gap-2">
             <Button
               variant="ghost"
               onClick={() =>
-                navigator.clipboard.writeText(
-                  `https://trimmr.in/${url?.short_url}`
-                )
+                navigator.clipboard.writeText(`https://trimmr.in/${link}`)
               }
             >
               <Copy />

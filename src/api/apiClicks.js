@@ -39,8 +39,8 @@ export const storeClicks = async ({ id, originalUrl }) => {
     });
     // route the user to original url
     window.location.href = originalUrl;
-    console.log("Stats stored successfully");
-    return true;
+    // console.log("Stats stored successfully");
+    // return true;
   } catch (error) {
     console.error("Error recording click:", error);
   }

@@ -9,13 +9,27 @@ import { BeatLoader } from "react-spinners";
 const LinkCard = ({ url = [], fetchUrls }) => {
   const downloadImage = () => {
     const imageUrl = url?.qr;
-    const fileName = url?.title;
-    const anchor = document.createElement("a");
-    anchor.href = imageUrl;
-    anchor.download = fileName;
-    document.body.appendChild(anchor);
-    anchor.click(); //download the url
-    document.body.removeChild(anchor); //clean up the anchor element
+    const fileName = `${url?.title}.png`;
+
+    fetch(imageUrl)
+      .then((response) => response.blob()) // Convert the image to a Blob
+      .then((blob) => {
+        const blobUrl = URL.createObjectURL(blob); // Create a Blob URL
+        const anchor = document.createElement("a");
+        anchor.href = blobUrl;
+        anchor.download = fileName; // Set the desired file name
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+      })
+      .catch((error) => console.error("Error downloading the image:", error));
+    // const fileName = url?.title;
+    // const anchor = document.createElement("a");
+    // anchor.href = imageUrl;
+    // anchor.download = fileName;
+    // document.body.appendChild(anchor);
+    // anchor.click(); //download the url
+    // document.body.removeChild(anchor); //clean up the anchor element
   };
   const { loading: loadingDelete, fn: fnDelete } = useFetch(deleteUrl, url?.id);
 

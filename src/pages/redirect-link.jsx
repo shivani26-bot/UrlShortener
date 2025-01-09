@@ -12,6 +12,7 @@ const RedirectLink = () => {
     id: data?.id,
     originalUrl: data?.original_url,
   });
+
   useEffect(() => {
     fn();
   }, []);
@@ -19,6 +20,7 @@ const RedirectLink = () => {
   useEffect(() => {
     if (!loading && data) {
       fnStats();
+    
     }
   }, [loading]);
 
